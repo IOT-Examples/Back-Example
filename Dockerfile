@@ -5,10 +5,8 @@ FROM maven:3.9-eclipse-temurin-21 AS build
 
 WORKDIR /app
 
-# Copiar wrapper de Maven y POM primero (aprovecha caché de capas)
+# Copiar POM primero (aprovecha caché de capas)
 COPY pom.xml .
-COPY mvnw .
-COPY .mvn .mvn
 
 # Descargar dependencias (capa cacheable)
 RUN mvn dependency:go-offline -B
