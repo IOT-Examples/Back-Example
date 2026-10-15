@@ -301,6 +301,75 @@ async def send_average(device_id: str, samples: int, avg_temp: float, avg_hum: f
 2. **Despliegue en la nube:** Railway, Render, AWS, GCP, etc.
 3. **Red privada:** Si ambos servicios están en la misma red, usar la IP interna.
 
+## Despliegue en Render
+
+### Opción 1: Automática con Blueprint
+
+Este proyecto incluye `render.yaml` (blueprint). Al conectar el repositorio a Render:
+
+1. Ve a https://render.com/
+2. Haz clic en **New** → **Web Service**
+3. Conecta tu repositorio de GitHub/GitLab
+4. Render detectará automáticamente el `render.yaml` y configurará el servicio
+5. Añade las variables de entorno en el panel de Render:
+
+| Variable | Valor |
+|----------|-------|
+| `DB_HOST` | Host de tu PostgreSQL en Render |
+| `DB_PORT` | `5432` |
+| `DB_NAME` | `iot_telemetry` |
+| `DB_USERNAME` | Usuario de PostgreSQL |
+| `DB_PASSWORD` | Contraseña de PostgreSQL |
+| `SERVER_PORT` | `10080` (o el que Render asigne) |
+
+6. Render construirá la imagen Docker y desplegará automáticamente
+
+### Opción 2: Manual
+
+```bash
+# 1. Crear servicio en Render
+#    - Ve a Render Dashboard → New → Web Service
+#    - Selecciona "Docker" como runtime
+#    - Conecta tu repositorio
+
+# 2. Configurar variables de entorno en el panel:
+#    DB_HOST, DB_PORT, DB_NAME, DB_USERNAME, DB_PASSWORD, SERVER_PORT
+
+# 3. Render detectará el Dockerfile y construirá la imagen
+```
+
+### Opción 3: Probar el Dockerfile localmente
+
+```bash
+# Construir la imagen
+docker build -t iot-backend .
+
+# Ejecutar con variables de entorno
+docker run -p 8080:8080 \
+  -e DB_HOST=localhost \
+  -e DB_PORT=5432 \
+  -e DB_NAME=iot_telemetry \
+  -e DB_USERNAME=iot_user \
+  -e DB_PASSWORD=iot_password \
+  -e PORT=8080 \
+  iot-backend
+
+# Verificar que está corriendo
+curl http://localhost:8080/actuator/health
+```
+
+## PostgreSQL en Render
+
+Render ofrece PostgreSQL como servicio adicional:
+
+1. En Render Dashboard → New → PostgreSQL
+2. Selecciona el plan (free o pago)
+3. Una vez creado, Render te dará las credenciales
+4. Copia el **Internal Database URL** o los valores individuales
+5. Configura las variables de entorno `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USERNAME`, `DB_PASSWORD` con esos valores
+
+**Importante:** Usa el **Internal Database URL** (no el External) cuando ambos servicios estén en Render.
+
 ## Próximos Pasos (No implementados)
 
 - [ ] Autenticación/autorización (API Key o JWT)

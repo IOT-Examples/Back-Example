@@ -1,0 +1,36 @@
+# Git
+.git
+.gitignore
+
+# Build output (se regenera dentro del contenedor)
+target/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Documentación
+README.md
+HELP.md
+
+# Variables de seguridad
+.env
+.env.local
+.env.*.local
+
+# Tests (no necesarios en la imagen final)
+src/test/
+
+# Maven wrapper (no lo usamos dentro del contenedor)
+.mvn/
+mvnw
+mvnw.cmd
+
+# Docker
+Dockerfile
+.dockerignore
+docker-compose.yml
+
+# Logs
+*.log

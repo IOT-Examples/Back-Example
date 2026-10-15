@@ -1,0 +1,23 @@
+# Render Blueprint — IoT Backend
+# https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: iot-backend
+    runtime: docker
+    plan: free
+    region: oregon
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        sync: false
+      - key: DB_NAME
+        sync: false
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: SERVER_PORT
+        sync: false
